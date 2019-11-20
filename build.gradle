@@ -1,0 +1,54 @@
+group = 'com.auth0'
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+
+
+compileJava {
+    sourceCompatibility '1.8'
+    targetCompatibility '1.8'
+}
+
+buildscript {
+    repositories {
+    	maven{
+    		name 'Shadow'
+            url 'http://dl.bintray.com/content/johnrengelman/gradle-plugins'
+    	}
+        mavenCentral()
+    }
+    dependencies {
+    	classpath 'org.gradle.plugins:shadow:0.7.4'
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+    }
+}
+
+version = '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.auth0:mvc-auth-commons:1.+'
+    compile 'org.springframework.boot:spring-boot-starter-web:1.5.6.RELEASE'
+
+    runtime 'org.springframework.boot:spring-boot-starter-tomcat:1.5.6.RELEASE'
+    runtime 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.20'
+    runtime 'javax.servlet:jstl:1.2'
+
+    testCompile 'junit:junit:4.12'
+}
+
+tasks.withType(JavaExec) {
+    if (System.getProperty('DEBUG', 'false') == 'true') {
+        jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9099'
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.auth0.example.App'
+    }
+}
